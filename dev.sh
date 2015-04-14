@@ -3,7 +3,20 @@ AGENT_SERVER_CMD=~/bin/agent-server.sh
 PRIVATE_AGENT_CMD=~/workspace/csd-agent/csd-agent/csd-agent-core/bin/csd-agent.sh
 STORY_WEB_CMD=~/bin/story-web.sh
 
+prepare() {
+  mkdir -p conf
+  cp ~/workspace/csd-agent/csd-agent/csd-agent-server/local-test-config.yml conf/local-dev-agent-server-config.yml
+  cp ~/workspace/csd-agent/csd-agent/csd-agent-core/conf/local-csd-agent-conf.json conf/local-dev-csd-agent-conf.json
+
+  perl -p -i -e 's#ssl\:\/\/10.1.1.5\:61617#tcp\:\/\/localhost\:61616#' conf/local-dev-csd-agent-conf.json
+
+  cat conf/local-dev-agent-server-config.yml
+  cat conf/local-dev-csd-agent-conf.json
+}
+
 start() {
+  prepare
+
   ## amq
   echo "***************************"
   $AMQ_CMD start
