@@ -1,0 +1,9 @@
+
+echo "mapping: "
+git remote -vv
+
+echo "remote origin:"
+git config --get remote.origin.url
+
+echo "remote fork:"
+git config --get remote.fork.url
