@@ -5,10 +5,16 @@ STORY_WEB_CMD=~/bin/story-web.sh
 
 prepare() {
   mkdir -p conf
+  touch conf/s3env.sh
+  . conf/s3env.sh
+
   cp ~/workspace/csd-agent/csd-agent/csd-agent-server/local-test-config.yml conf/local-dev-agent-server-config.yml
   cp ~/workspace/csd-agent/csd-agent/csd-agent-core/conf/local-csd-agent-conf.json conf/local-dev-csd-agent-conf.json
 
   perl -p -i -e 's#ssl\:\/\/10.1.1.5\:61617#tcp\:\/\/localhost\:61616#' conf/local-dev-csd-agent-conf.json
+  perl -p -i -e 's/(bucketName\:\s*)(.*)/"$1 $ENV{S3_BUCKET_NAME}"/ge' conf/local-dev-agent-server-config.yml
+  perl -p -i -e 's/(accessKey\:\s*)(.*)/"$1 $ENV{S3_ACCESS_KEY}"/ge' conf/local-dev-agent-server-config.yml
+  perl -p -i -e 's/(secretKey\:\s*)(.*)/"$1 $ENV{S3_SECRET_KEY}"/ge' conf/local-dev-agent-server-config.yml
 
   cat conf/local-dev-agent-server-config.yml
   cat conf/local-dev-csd-agent-conf.json
@@ -74,6 +80,7 @@ status() {
 }
 
 case $1 in
+prepare) prepare ;;
 start) start ;;
 stop) stop ;;
 restart) restart ;;
