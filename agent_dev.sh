@@ -1,3 +1,5 @@
+cd "$(dirname "$0")"
+
 AMQ_CMD=/opt/apache-activemq-5.10.0-csd-1/bin/macosx/activemq
 AGENT_SERVER_CMD=~/bin/agent-server.sh
 PRIVATE_AGENT_CMD=~/workspace/csd-agent/csd-agent/csd-agent-core/bin/csd-agent.sh
