@@ -11,11 +11,18 @@ prepare() {
   . conf/s3env.sh
 
   ## getting defult configurtion from code
-  cp ~/workspace/csd-agent/csd-agent/csd-agent-server/local-test-config.yml conf/local-dev-agent-server-config.yml
-  cp ~/workspace/csd-agent/csd-agent/csd-agent-core/conf/local-csd-agent-conf.json conf/local-dev-csd-agent-conf.json
+  cp conf/local-dev-agent-server-config.yml.tmpl conf/local-dev-agent-server-config.yml  
+  
+  ## set up for private agent
+  ## cp conf/local-dev-csd-agent-conf.json.tmpl conf/local-dev-csd-agent-conf.json
+  
+  ## set up needed for hosted agent
+  cp conf/local-dev-csd-hosted-agent-conf.json.tmpl conf/local-dev-csd-agent-conf.json
+  echo "hostedAgentPoolId: fec7a6fc-6004-3ec0-a98f-b27b6bb3412b" >> conf/local-dev-agent-server-config.yml
 
   perl -p -i -e 's#ssl\:\/\/10.1.1.5\:61617#tcp\:\/\/localhost\:61616#' conf/local-dev-csd-agent-conf.json
   perl -p -i -e 's/(bucketName\:\s*)(.*)/"$1$ENV{AWS_BUCKET_NAME}"/ge' conf/local-dev-agent-server-config.yml
+
   perl -p -i -e 's/(accessKey\:\s*)(.*)/"$1$ENV{AWS_ACCESS_KEY}"/ge' conf/local-dev-agent-server-config.yml
   perl -p -i -e 's/(secretKey\:\s*)(.*)/"$1$ENV{AWS_SECRET_KEY}"/ge' conf/local-dev-agent-server-config.yml
 
@@ -23,6 +30,7 @@ prepare() {
   echo "" >> conf/local-dev-agent-server-config.yml
   echo "sparkyHost: sparky-service.csd1.demo-us-west-1" >> conf/local-dev-agent-server-config.yml
   echo "sparkyPort: 11080" >> conf/local-dev-agent-server-config.yml
+
 
   ## setting up stormy dependency
   echo "" >> conf/local-dev-agent-server-config.yml
